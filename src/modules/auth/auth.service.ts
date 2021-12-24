@@ -1,26 +1,36 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UsersRepository } from './users.repository';
+import { AuthCredentialsDto } from './dto/auth-credentials.dto';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    @InjectRepository(UsersRepository)
+    private UsersRepository: UsersRepository,
+    private jwtService: JwtService,
+  ) {}
+
+  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+    return this.UsersRepository.signUp(authCredentialsDto);
   }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+  async signIn(
+    authCredentialsDto: AuthCredentialsDto,
+  ): Promise<{ access: string }> {
+    const username = await this.UsersRepository.validateUserPassword(
+      authCredentialsDto,
+    );
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+    if (!username) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
+    const payload: JwtPayload = { username };
+    const access = await this.jwtService.sign(payload);
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    return { access };
   }
 }
