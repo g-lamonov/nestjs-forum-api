@@ -1,11 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from './users.repository';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { CoreApiResponse } from 'src/core/common/api/CoreApiResponse';
-import { Code } from 'src/core/common/code/Code';
 
 @Injectable()
 export class AuthService {
@@ -27,10 +26,7 @@ export class AuthService {
     );
 
     if (!username) {
-      return CoreApiResponse.error(
-        Code.UNAUTHORIZED_ERROR.code,
-        'Invalid credentials',
-      );
+      throw new UnauthorizedException('Please check your login credentials');
     }
 
     const payload: JwtPayload = { username };

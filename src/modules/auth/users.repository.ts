@@ -3,6 +3,10 @@ import * as bcrypt from 'bcrypt';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { User } from '../user/user.entity';
 import { CoreApiResponse } from 'src/core/common/api/CoreApiResponse';
+import {
+  ConflictException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 
 @EntityRepository(User)
 export class UsersRepository extends Repository<User> {
@@ -20,9 +24,9 @@ export class UsersRepository extends Repository<User> {
       return CoreApiResponse.success();
     } catch (error) {
       if (error.code === '23505') {
-        return CoreApiResponse.error(409, 'Username already exists');
+        throw new ConflictException('Username already exists');
       } else {
-        return CoreApiResponse.error();
+        throw new InternalServerErrorException();
       }
     }
   }
