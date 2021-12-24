@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ArticleModule } from './article/article.module';
-import { AuthModule } from './auth/auth.module';
-import { CategoryModule } from './category/category.module';
-import { LikeModule } from './like/like.module';
+import { ArticleModule } from './modules/article/article.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { CategoryModule } from './modules/category/category.module';
+import { LikeModule } from './modules/like/like.module';
 import { TagModule } from './tag/tag.module';
-import { CommentModule } from './comment/comment.module';
+import { CommentModule } from './modules/comment/comment.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 
