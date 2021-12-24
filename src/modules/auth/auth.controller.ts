@@ -4,7 +4,6 @@ import {
   Body,
   ValidationPipe,
   UsePipes,
-  HttpStatus,
 } from '@nestjs/common';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { AuthService } from './auth.service';
