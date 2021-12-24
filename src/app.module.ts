@@ -9,6 +9,7 @@ import { TagModule } from './tag/tag.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ConfigModule } from '@nestjs/config';
     CommentModule,
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGODB_URL),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
