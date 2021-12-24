@@ -5,9 +5,9 @@ import { ArticleModule } from './modules/article/article.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CategoryModule } from './modules/category/category.module';
 import { LikeModule } from './modules/like/like.module';
-import { TagModule } from './tag/tag.module';
+import { TagModule } from './modules/tag/tag.module';
 import { CommentModule } from './modules/comment/comment.module';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './modules/user/user.module';
 
@@ -20,8 +20,13 @@ import { UserModule } from './modules/user/user.module';
     TagModule,
     CommentModule,
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGODB_URL),
     UserModule,
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      url: process.env.DATABASE_URL,
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: true,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
