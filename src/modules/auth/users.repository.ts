@@ -1,15 +1,12 @@
 import { Repository, EntityRepository } from 'typeorm';
-import {
-  ConflictException,
-  InternalServerErrorException,
-} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { User } from '../user/user.entity';
+import { CoreApiResponse } from 'src/core/common/api/CoreApiResponse';
 
 @EntityRepository(User)
 export class UsersRepository extends Repository<User> {
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<object> {
     const { username, password } = authCredentialsDto;
 
     const user = new User();
@@ -19,11 +16,13 @@ export class UsersRepository extends Repository<User> {
 
     try {
       await user.save();
+
+      return CoreApiResponse.success();
     } catch (error) {
       if (error.code === '23505') {
-        throw new ConflictException('Username already exists');
+        return CoreApiResponse.error(409, 'Username already exists');
       } else {
-        throw new InternalServerErrorException();
+        return CoreApiResponse.error();
       }
     }
   }
