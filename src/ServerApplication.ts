@@ -29,6 +29,7 @@ export class ServerApplication {
       .setTitle(title)
       .setDescription(description)
       .setVersion(version)
+      .addBearerAuth()
       .build();
 
     const document: OpenAPIObject = SwaggerModule.createDocument(app, options);
