@@ -15,10 +15,10 @@ import { UserModule } from './modules/user/user.module';
   imports: [
     ArticleModule,
     AuthModule,
-    CategoryModule,
-    LikeModule,
+    // CategoryModule,
+    // LikeModule,
     TagModule,
-    CommentModule,
+    // CommentModule,
     ConfigModule.forRoot(),
     UserModule,
     TypeOrmModule.forRoot({
