@@ -1,8 +1,11 @@
+import { TagEntity } from 'src/modules/tag/entities/tag.entity';
 import { User } from 'src/modules/user/user.entity';
 import {
   BeforeUpdate,
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -37,4 +40,14 @@ export class Article {
 
   @ManyToOne(() => User, (user) => user.articles, { eager: true })
   author: User;
+
+  @ManyToMany(type => TagEntity, type => type.articles, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+    eager: true,
+    nullable: true,
+  })
+  @JoinTable()
+  tags: TagEntity[];
 }

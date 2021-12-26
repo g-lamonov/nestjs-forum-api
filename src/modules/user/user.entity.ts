@@ -5,6 +5,8 @@ import {
   Column,
   Unique,
   OneToMany,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Article } from '../article/entities/article.entity';
@@ -31,4 +33,8 @@ export class User extends BaseEntity {
     const hash = await bcrypt.hash(password, this.salt);
     return hash === this.password;
   }
+
+  @ManyToMany(() => Article)
+  @JoinTable()
+  favorites: Article[];
 }
