@@ -11,7 +11,7 @@ export class TagController {
   constructor(private readonly tagService: TagService) {}
 
   @Get()
-  async findAll(): Promise<TagEntity[]> {
+  async findAll() {
     return await this.tagService.findAll();
   }
 }
