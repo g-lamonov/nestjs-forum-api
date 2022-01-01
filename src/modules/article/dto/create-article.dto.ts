@@ -17,4 +17,8 @@ export class CreateArticleDto {
   @ApiProperty({ required: false, example: [1] })
   @IsNotEmpty()
   readonly tags: number[];
+
+  @ApiProperty({ required: false, example: [1] })
+  @IsNotEmpty()
+  readonly categories: number[];
 }

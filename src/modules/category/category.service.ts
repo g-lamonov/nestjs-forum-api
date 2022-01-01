@@ -1,26 +1,46 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CoreApiResponse } from 'src/core/common/api/CoreApiResponse';
+import { Repository } from 'typeorm';
+import Category from './category.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class CategoryService {
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+  constructor(
+    @InjectRepository(Category)
+    private readonly categoriesRepository: Repository<Category>,
+  ) {}
+
+  async createCategory(userId: number, createCategoryDto: CreateCategoryDto) {
+    const category = new Category();
+
+    category.name = createCategoryDto.name;
+
+    const newCategory = await this.categoriesRepository.save(category);
+
+    return CoreApiResponse.success(newCategory);
   }
 
-  findAll() {
-    return `This action returns all category`;
+  async getAllCategories() {
+    const categories = await this.categoriesRepository.find();
+    return CoreApiResponse.success(categories);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async getCategoryById(id: number) {
+    const category = await this.categoriesRepository.findOne(id);
+    if (!category) {
+      throw new NotFoundException(id);
+    }
+    return CoreApiResponse.success(category);
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async updateCategory(id: number, category: { name: string }) {
+    await this.categoriesRepository.update(id, category);
+    const updatedCategory = await this.categoriesRepository.findOne(id);
+    if (!updatedCategory) {
+      throw new NotFoundException(id);
+    }
+    return CoreApiResponse.success(updatedCategory);
   }
 }

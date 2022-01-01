@@ -1,45 +1,57 @@
 import {
+  Body,
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
   Param,
-  Delete,
+  Post,
+  Put,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
-@Controller('category')
-export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+@ApiBearerAuth()
+@ApiTags('categories')
+@Controller('categories')
+export class CategoriesController {
+  constructor(private readonly categoriesService: CategoryService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
-  create(@Body() createCategoryDto: CreateCategoryDto) {
-    return this.categoryService.create(createCategoryDto);
+  async createCategory(
+    @Body() createCategoryDto: CreateCategoryDto,
+    @Request() request,
+  ) {
+    const { user } = request;
+
+    return this.categoriesService.createCategory(user.id, createCategoryDto);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get()
-  findAll() {
-    return this.categoryService.findAll();
+  async getAllCategories() {
+    return await this.categoriesService.getAllCategories();
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @ApiParam({ name: 'id', type: 'number' })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.categoryService.findOne(+id);
+  async getCategoryById(@Param() params) {
+    const { id } = params;
+
+    return this.categoriesService.getCategoryById(id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
+  @UseGuards(AuthGuard('jwt'))
+  @Put(':id')
+  async updateCategory(
+    @Param('id') id: number,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
-    return this.categoryService.update(+id, updateCategoryDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.categoryService.remove(+id);
+    return this.categoriesService.updateCategory(id, updateCategoryDto);
   }
 }

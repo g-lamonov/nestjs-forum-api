@@ -1,3 +1,4 @@
+import Category from 'src/modules/category/category.entity';
 import { TagEntity } from 'src/modules/tag/entities/tag.entity';
 import { User } from 'src/modules/user/user.entity';
 import {
@@ -50,4 +51,11 @@ export class Article {
   })
   @JoinTable()
   tags: TagEntity[];
+
+  @ManyToMany(() => Category, (category: Category) => category.articles, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinTable()
+  public categories?: Category[];
 }

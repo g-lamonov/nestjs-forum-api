@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user/user.entity';
 import { CoreApiResponse } from 'src/core/common/api/CoreApiResponse';
 import { TagEntity } from '../tag/entities/tag.entity';
+import Category from '../category/category.entity';
 
 @Injectable()
 export class ArticleService {
@@ -19,10 +20,13 @@ export class ArticleService {
 
     @InjectRepository(TagEntity)
     private readonly tagRepository: Repository<TagEntity>,
+
+    @InjectRepository(TagEntity)
+    private readonly categoryRepository: Repository<Category>,
   ) {}
 
   async create(userId, createArticleDto: CreateArticleDto) {
-    const { title, body, description, tags } = createArticleDto;
+    const { title, body, description, tags, categories } = createArticleDto;
 
     const article = new Article();
 
@@ -42,7 +46,21 @@ export class ArticleService {
       }
       article.tags = attr;
     }
-  
+
+    if (categories) {
+      const attr = [];
+      for (const item of categories) {
+        const category = await this.categoryRepository.findOne(item);
+        if (!category) {
+          throw new BadRequestException(
+            `Category with id ${item} does not exist`,
+          );
+        }
+        attr.push(category);
+      }
+      article.categories = attr;
+    }
+
     const newArticle = await this.articleRepository.save(article);
 
     const author = await this.userRepository.findOne({
@@ -60,6 +78,7 @@ export class ArticleService {
     const queryBuilder = await getRepository(Article)
       .createQueryBuilder('article')
       .leftJoinAndSelect('article.tags', 'tag')
+      .leftJoinAndSelect('article.categories', 'category')
       .leftJoinAndSelect('article.author', 'author');
 
     queryBuilder.where('1 = 1');

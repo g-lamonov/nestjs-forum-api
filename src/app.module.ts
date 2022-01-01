@@ -14,6 +14,8 @@ import { UserModule } from './modules/user/user.module';
 @Module({
   imports: [
     ArticleModule,
+    CategoryModule,
+
     AuthModule,
     // CategoryModule,
     // LikeModule,
