@@ -8,6 +8,7 @@ import { User } from '../user/user.entity';
 import { CoreApiResponse } from 'src/core/common/api/CoreApiResponse';
 import { TagEntity } from '../tag/entities/tag.entity';
 import Category from '../category/category.entity';
+import { CommentEntity } from '../comment/entities/comment.entity';
 
 @Injectable()
 export class ArticleService {
@@ -21,8 +22,11 @@ export class ArticleService {
     @InjectRepository(TagEntity)
     private readonly tagRepository: Repository<TagEntity>,
 
-    @InjectRepository(TagEntity)
+    @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+
+    @InjectRepository(CommentEntity)
+    private readonly commentRepository: Repository<CommentEntity>,
   ) {}
 
   async create(userId, createArticleDto: CreateArticleDto) {
@@ -91,7 +95,7 @@ export class ArticleService {
     }
 
     const count = await queryBuilder.getCount();
-    
+
     if ('limit' in query) {
       queryBuilder.limit(query.limit);
     }
@@ -105,6 +109,21 @@ export class ArticleService {
     const articles = await queryBuilder.getMany();
 
     return CoreApiResponse.success({ count, articles });
+  }
+
+  async getCommentsInArticle(articleId: number, query) {
+    const commentsQuery = await this.commentRepository
+      .createQueryBuilder('comment')
+      .limit(query.limit)
+      .offset(query.offset)
+      .orderBy('comment.createdAt', 'ASC')
+      .leftJoin('comment.article', 'article')
+      .andWhere('article.id = :id', { id: articleId });
+
+    const count = await commentsQuery.getCount();
+    const comments = await commentsQuery.getMany();
+
+    return CoreApiResponse.success({ count, comments });
   }
 
   slugify(title: string) {

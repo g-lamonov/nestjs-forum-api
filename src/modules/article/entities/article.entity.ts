@@ -1,4 +1,5 @@
 import Category from 'src/modules/category/category.entity';
+import { CommentEntity } from 'src/modules/comment/entities/comment.entity';
 import { TagEntity } from 'src/modules/tag/entities/tag.entity';
 import { User } from 'src/modules/user/user.entity';
 import {
@@ -8,6 +9,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -58,4 +60,7 @@ export class Article {
   })
   @JoinTable()
   public categories?: Category[];
+
+  @OneToMany(() => CommentEntity, (type) => type.article)
+  comments: CommentEntity[];
 }

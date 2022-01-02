@@ -1,42 +1,40 @@
 import {
-  Controller,
-  Get,
   Post,
   Body,
-  Patch,
-  Param,
+  Put,
   Delete,
+  Param,
+  Controller,
+  Request,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { DeleteDto } from 'src/core/common/base/base.dto';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
-@Controller('comment')
+@ApiBearerAuth()
+@ApiTags('comments')
+@Controller('comments')
 export class CommentController {
-  constructor(private readonly commentService: CommentService) {}
+  constructor(private readonly service: CommentService) {}
 
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentService.create(createCommentDto);
+  async createComment(@Body() comment: CreateCommentDto, @Request() request) {
+    const { user } = request;
+    return await this.service.createComment(user, comment);
   }
 
-  @Get()
-  findAll() {
-    return this.commentService.findAll();
+  @Put(':id')
+  async updateComment(
+    @Param('id') id: string,
+    @Body() comment: UpdateCommentDto,
+  ) {
+    return await this.service.updateComment(id, comment);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentService.update(+id, updateCommentDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentService.remove(+id);
+  @Delete()
+  public async softDelete(@Body() dto: DeleteDto) {
+    return await this.service.softDelete(dto.ids);
   }
 }
