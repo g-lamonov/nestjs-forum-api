@@ -1,3 +1,4 @@
+import { TableName } from 'src/core/common/enums/db.enums';
 import {
   Entity,
   Column,
@@ -6,10 +7,10 @@ import {
   BaseEntity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ArticleEntity } from 'src/modules/article/article.entity';
-import { UserEntity } from 'src/modules/user/user.entity';
+import { ArticleEntity } from 'src/db/entities/article.entity';
+import { UserEntity } from 'src/db/entities/user.entity';
 
-@Entity('comment')
+@Entity({ name: TableName.Comment })
 export class CommentEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -39,5 +40,5 @@ export class CommentEntity extends BaseEntity {
   article: ArticleEntity;
 
   @ManyToOne(() => UserEntity, (user: UserEntity) => user.articles)
-  public author: UserEntity;
+  public user: UserEntity;
 }

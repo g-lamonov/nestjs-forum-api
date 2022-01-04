@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommentService } from './comment.service';
 import { CommentController } from './comment.controller';
-import { ArticleEntity } from '../article/article.entity';
-import { CommentEntity } from './comment.entity';
+import { ArticleEntity } from '../../db/entities/article.entity';
+import { CommentEntity } from '../../db/entities/comment.entity';
 import { UserModule } from '../user/user.module';
 
 @Module({

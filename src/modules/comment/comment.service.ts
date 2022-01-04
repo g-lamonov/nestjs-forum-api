@@ -3,11 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BadRequestException } from '@nestjs/common/exceptions';
 
-import { CommentEntity } from './comment.entity';
-import { ArticleEntity } from '../article/article.entity';
+import { CommentEntity } from '../../db/entities/comment.entity';
+import { ArticleEntity } from '../../db/entities/article.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { UserEntity } from '../user/user.entity';
+import { UserEntity } from '../../db/entities/user.entity';
 import { CoreApiResponse } from 'src/core/common/api/CoreApiResponse';
 
 @Injectable()
@@ -26,7 +26,7 @@ export class CommentService {
       createCommentDto.articleId,
     );
 
-    comment.author = user;
+    comment.user = user;
 
     if (!article) {
       throw new BadRequestException(

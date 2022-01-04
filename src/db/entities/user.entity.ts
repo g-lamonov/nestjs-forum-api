@@ -5,14 +5,13 @@ import {
   Column,
   Unique,
   OneToMany,
-  ManyToMany,
-  JoinTable,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { ArticleEntity } from '../article/article.entity';
+import { ArticleEntity } from './article.entity';
 import { UserRole } from 'src/core/common/enums/UserEnums';
+import { TableName } from 'src/core/common/enums/db.enums';
 
-@Entity()
+@Entity({ name: TableName.User })
 @Unique(['username'])
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -30,15 +29,17 @@ export class UserEntity extends BaseEntity {
   @Column({ select: false })
   salt: string;
 
-  @OneToMany(() => ArticleEntity, (article) => article.author)
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  updatedAt: Date;
+
+  @OneToMany(() => ArticleEntity, (article) => article.user)
   articles: ArticleEntity[];
 
   async validatePassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);
     return hash === this.password;
   }
-
-  @ManyToMany(() => ArticleEntity)
-  @JoinTable()
-  favorites: ArticleEntity[];
 }

@@ -1,14 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { getRepository, Repository } from 'typeorm';
 import { CreateArticleDto } from './dto/create-article.dto';
-import { ArticleEntity } from './article.entity';
+import { ArticleEntity } from '../../db/entities/article.entity';
 import slug = require('slug');
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../user/user.entity';
+import { UserEntity } from '../../db/entities/user.entity';
 import { CoreApiResponse } from 'src/core/common/api/CoreApiResponse';
-import { TagEntity } from '../tag/tag.entity';
-import { CategoryEntity } from '../category/category.entity';
-import { CommentEntity } from '../comment/comment.entity';
+import { TagEntity } from '../../db/entities/tag.entity';
+import { CategoryEntity } from '../../db/entities/category.entity';
+import { CommentEntity } from '../../db/entities/comment.entity';
 
 @Injectable()
 export class ArticleService {
@@ -81,17 +81,17 @@ export class ArticleService {
   async findAll(query) {
     const queryBuilder = await getRepository(ArticleEntity)
       .createQueryBuilder('article')
-      .leftJoinAndSelect('article.tags', 'tag')
-      .leftJoinAndSelect('article.categories', 'category')
-      .leftJoinAndSelect('article.author', 'author');
+      .leftJoinAndSelect('article.tags', 'tags')
+      .leftJoinAndSelect('article.categories', 'categories')
+      .leftJoinAndSelect('article.user', 'user');
 
     queryBuilder.where('1 = 1');
 
-    if ('author' in query) {
+    if ('user' in query) {
       const author = await this.userRepository.findOne({
         username: query.author,
       });
-      queryBuilder.andWhere('article.authorId = :id', { id: author.id });
+      queryBuilder.andWhere('article.userId = :id', { id: author.id });
     }
 
     const count = await queryBuilder.getCount();

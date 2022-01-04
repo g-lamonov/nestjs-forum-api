@@ -23,8 +23,14 @@ import { UserModule } from './modules/user/user.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
+      entities: [`${__dirname}/../**/*.entity.{ts,js}`],
+      synchronize: false,
+      dropSchema: false,
+      migrations: ['dist/db/migrations/*.js'],
+      cli: {
+        migrationsDir: 'src/db/migrations/*.ts',
+        entitiesDir: 'src/db/entities/*.ts',
+      },
     }),
   ],
   controllers: [AppController],

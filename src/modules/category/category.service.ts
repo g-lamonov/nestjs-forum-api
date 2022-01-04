@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CoreApiResponse } from 'src/core/common/api/CoreApiResponse';
 import { Repository } from 'typeorm';
-import { CategoryEntity } from './category.entity';
+import { CategoryEntity } from '../../db/entities/category.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
 
 @Injectable()

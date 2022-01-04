@@ -1,7 +1,8 @@
-import { CategoryEntity } from 'src/modules/category/category.entity';
-import { CommentEntity } from 'src/modules/comment/comment.entity';
-import { TagEntity } from 'src/modules/tag/tag.entity';
-import { UserEntity } from 'src/modules/user/user.entity';
+import { ForeignKey, TableName } from 'src/core/common/enums/db.enums';
+import { CategoryEntity } from 'src/db/entities/category.entity';
+import { CommentEntity } from 'src/db/entities/comment.entity';
+import { TagEntity } from 'src/db/entities/tag.entity';
+import { UserEntity } from 'src/db/entities/user.entity';
 import {
   BeforeUpdate,
   Column,
@@ -13,7 +14,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity({ name: 'articles' })
+@Entity({ name: TableName.Article })
 export class ArticleEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -42,7 +43,7 @@ export class ArticleEntity {
   }
 
   @ManyToOne(() => UserEntity, (user) => user.articles, { eager: true })
-  author: UserEntity;
+  user: UserEntity;
 
   @ManyToMany(() => TagEntity, (type) => type.articles, {
     cascade: true,
@@ -51,7 +52,17 @@ export class ArticleEntity {
     eager: true,
     nullable: true,
   })
-  @JoinTable()
+  @JoinTable({
+    name: TableName.ArticleTag,
+    joinColumn: {
+      name: ForeignKey.ArticleId,
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: ForeignKey.TagId,
+      referencedColumnName: 'id',
+    },
+  })
   tags: TagEntity[];
 
   @ManyToMany(
@@ -62,7 +73,17 @@ export class ArticleEntity {
       cascade: true,
     },
   )
-  @JoinTable()
+  @JoinTable({
+    name: TableName.ArticleCategory,
+    joinColumn: {
+      name: ForeignKey.ArticleId,
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: ForeignKey.CategoryId,
+      referencedColumnName: 'id',
+    },
+  })
   public categories?: CategoryEntity[];
 
   @OneToMany(() => CommentEntity, (type) => type.article)

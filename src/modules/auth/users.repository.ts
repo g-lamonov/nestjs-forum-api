@@ -1,7 +1,7 @@
 import { Repository, EntityRepository, getRepository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
-import { UserEntity } from '../user/user.entity';
+import { UserEntity } from '../../db/entities/user.entity';
 import { CoreApiResponse } from 'src/core/common/api/CoreApiResponse';
 import {
   ConflictException,
@@ -56,14 +56,13 @@ export class UsersRepository extends Repository<UserEntity> {
 
     const user = await getRepository(UserEntity).findOne({
       where: { username },
-      select: ['username'],
     });
 
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    return payload;
+    return user;
   }
 
   private async hashPassword(password: string, salt: string): Promise<string> {

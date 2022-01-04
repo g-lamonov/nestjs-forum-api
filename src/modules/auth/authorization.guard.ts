@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { Observable } from 'rxjs';
-import { UserEntity } from '../user/user.entity';
+import { UserEntity } from '../../db/entities/user.entity';
 import { UserRole } from 'src/core/common/enums/UserEnums';
 import { ROLES_KEY } from 'src/core/common/decorators/roles.decorator';
 import { getRepository } from 'typeorm';
