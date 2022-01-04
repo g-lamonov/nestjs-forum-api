@@ -1,29 +1,29 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { getRepository, Repository } from 'typeorm';
 import { CreateArticleDto } from './dto/create-article.dto';
-import { Article } from './entities/article.entity';
+import { ArticleEntity } from './entities/article.entity';
 import slug = require('slug');
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../user/user.entity';
+import { UserEntity } from '../user/user.entity';
 import { CoreApiResponse } from 'src/core/common/api/CoreApiResponse';
 import { TagEntity } from '../tag/entities/tag.entity';
-import Category from '../category/category.entity';
+import { CategoryEntity } from '../category/category.entity';
 import { CommentEntity } from '../comment/entities/comment.entity';
 
 @Injectable()
 export class ArticleService {
   constructor(
-    @InjectRepository(Article)
-    private readonly articleRepository: Repository<Article>,
+    @InjectRepository(ArticleEntity)
+    private readonly articleRepository: Repository<ArticleEntity>,
 
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
 
     @InjectRepository(TagEntity)
     private readonly tagRepository: Repository<TagEntity>,
 
-    @InjectRepository(Category)
-    private readonly categoryRepository: Repository<Category>,
+    @InjectRepository(CategoryEntity)
+    private readonly categoryRepository: Repository<CategoryEntity>,
 
     @InjectRepository(CommentEntity)
     private readonly commentRepository: Repository<CommentEntity>,
@@ -32,7 +32,7 @@ export class ArticleService {
   async create(userId, createArticleDto: CreateArticleDto) {
     const { title, body, description, tags, categories } = createArticleDto;
 
-    const article = new Article();
+    const article = new ArticleEntity();
 
     article.title = title;
     article.body = body;
@@ -79,7 +79,7 @@ export class ArticleService {
   }
 
   async findAll(query) {
-    const queryBuilder = await getRepository(Article)
+    const queryBuilder = await getRepository(ArticleEntity)
       .createQueryBuilder('article')
       .leftJoinAndSelect('article.tags', 'tag')
       .leftJoinAndSelect('article.categories', 'category')

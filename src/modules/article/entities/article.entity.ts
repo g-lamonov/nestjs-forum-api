@@ -1,7 +1,7 @@
-import Category from 'src/modules/category/category.entity';
+import { CategoryEntity } from 'src/modules/category/category.entity';
 import { CommentEntity } from 'src/modules/comment/entities/comment.entity';
 import { TagEntity } from 'src/modules/tag/entities/tag.entity';
-import { User } from 'src/modules/user/user.entity';
+import { UserEntity } from 'src/modules/user/user.entity';
 import {
   BeforeUpdate,
   Column,
@@ -14,7 +14,7 @@ import {
 } from 'typeorm';
 
 @Entity({ name: 'articles' })
-export class Article {
+export class ArticleEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -41,10 +41,10 @@ export class Article {
     this.updatedAt = new Date();
   }
 
-  @ManyToOne(() => User, (user) => user.articles, { eager: true })
-  author: User;
+  @ManyToOne(() => UserEntity, (user) => user.articles, { eager: true })
+  author: UserEntity;
 
-  @ManyToMany(type => TagEntity, type => type.articles, {
+  @ManyToMany(() => TagEntity, (type) => type.articles, {
     cascade: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
@@ -54,12 +54,16 @@ export class Article {
   @JoinTable()
   tags: TagEntity[];
 
-  @ManyToMany(() => Category, (category: Category) => category.articles, {
-    eager: true,
-    cascade: true,
-  })
+  @ManyToMany(
+    () => CategoryEntity,
+    (category: CategoryEntity) => category.articles,
+    {
+      eager: true,
+      cascade: true,
+    },
+  )
   @JoinTable()
-  public categories?: Category[];
+  public categories?: CategoryEntity[];
 
   @OneToMany(() => CommentEntity, (type) => type.article)
   comments: CommentEntity[];

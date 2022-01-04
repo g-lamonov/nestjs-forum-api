@@ -6,8 +6,8 @@ import {
   BaseEntity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Article } from 'src/modules/article/entities/article.entity';
-import { User } from 'src/modules/user/user.entity';
+import { ArticleEntity } from 'src/modules/article/entities/article.entity';
+import { UserEntity } from 'src/modules/user/user.entity';
 
 @Entity('comment')
 export class CommentEntity extends BaseEntity {
@@ -29,15 +29,15 @@ export class CommentEntity extends BaseEntity {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
-  @ManyToOne(() => Article, (type) => type.comments, {
+  @ManyToOne(() => ArticleEntity, (type) => type.comments, {
     cascade: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
     nullable: true,
   })
   @JoinColumn()
-  article: Article;
+  article: ArticleEntity;
 
-  @ManyToOne(() => User, (user: User) => user.articles)
-  public author: User;
+  @ManyToOne(() => UserEntity, (user: UserEntity) => user.articles)
+  public author: UserEntity;
 }

@@ -9,11 +9,11 @@ import {
   JoinTable,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Article } from '../article/entities/article.entity';
+import { ArticleEntity } from '../article/entities/article.entity';
 
 @Entity()
 @Unique(['username'])
-export class User extends BaseEntity {
+export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -26,15 +26,15 @@ export class User extends BaseEntity {
   @Column({ select: false })
   salt: string;
 
-  @OneToMany(() => Article, (article) => article.author)
-  articles: Article[];
+  @OneToMany(() => ArticleEntity, (article) => article.author)
+  articles: ArticleEntity[];
 
   async validatePassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);
     return hash === this.password;
   }
 
-  @ManyToMany(() => Article)
+  @ManyToMany(() => ArticleEntity)
   @JoinTable()
-  favorites: Article[];
+  favorites: ArticleEntity[];
 }

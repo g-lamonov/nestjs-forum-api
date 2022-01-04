@@ -4,10 +4,10 @@ import { Repository } from 'typeorm';
 import { BadRequestException } from '@nestjs/common/exceptions';
 
 import { CommentEntity } from './entities/comment.entity';
-import { Article } from '../article/entities/article.entity';
+import { ArticleEntity } from '../article/entities/article.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { User } from '../user/user.entity';
+import { UserEntity } from '../user/user.entity';
 import { CoreApiResponse } from 'src/core/common/api/CoreApiResponse';
 
 @Injectable()
@@ -15,11 +15,11 @@ export class CommentService {
   constructor(
     @InjectRepository(CommentEntity)
     private readonly commentRepository: Repository<CommentEntity>,
-    @InjectRepository(Article)
-    private readonly articleRepository: Repository<Article>,
+    @InjectRepository(ArticleEntity)
+    private readonly articleRepository: Repository<ArticleEntity>,
   ) {}
 
-  async createComment(user: User, createCommentDto: CreateCommentDto) {
+  async createComment(user: UserEntity, createCommentDto: CreateCommentDto) {
     const comment = new CommentEntity();
 
     const article = await this.articleRepository.findOne(
