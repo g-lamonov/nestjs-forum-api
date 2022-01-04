@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ArticleModule } from './modules/article/article.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CategoryModule } from './modules/category/category.module';
-import { LikeModule } from './modules/like/like.module';
 import { TagModule } from './modules/tag/tag.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -18,8 +17,6 @@ import { UserModule } from './modules/user/user.module';
     CommentModule,
 
     AuthModule,
-    // CategoryModule,
-    // LikeModule,
     TagModule,
     ConfigModule.forRoot(),
     UserModule,
