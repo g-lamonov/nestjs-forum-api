@@ -6,7 +6,7 @@ import {
   BaseEntity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ArticleEntity } from 'src/modules/article/entities/article.entity';
+import { ArticleEntity } from 'src/modules/article/article.entity';
 import { UserEntity } from 'src/modules/user/user.entity';
 
 @Entity('comment')

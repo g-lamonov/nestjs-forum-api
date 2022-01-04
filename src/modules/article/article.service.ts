@@ -1,14 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { getRepository, Repository } from 'typeorm';
 import { CreateArticleDto } from './dto/create-article.dto';
-import { ArticleEntity } from './entities/article.entity';
+import { ArticleEntity } from './article.entity';
 import slug = require('slug');
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../user/user.entity';
 import { CoreApiResponse } from 'src/core/common/api/CoreApiResponse';
-import { TagEntity } from '../tag/entities/tag.entity';
+import { TagEntity } from '../tag/tag.entity';
 import { CategoryEntity } from '../category/category.entity';
-import { CommentEntity } from '../comment/entities/comment.entity';
+import { CommentEntity } from '../comment/comment.entity';
 
 @Injectable()
 export class ArticleService {

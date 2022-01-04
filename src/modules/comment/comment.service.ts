@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BadRequestException } from '@nestjs/common/exceptions';
 
-import { CommentEntity } from './entities/comment.entity';
-import { ArticleEntity } from '../article/entities/article.entity';
+import { CommentEntity } from './comment.entity';
+import { ArticleEntity } from '../article/article.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { UserEntity } from '../user/user.entity';

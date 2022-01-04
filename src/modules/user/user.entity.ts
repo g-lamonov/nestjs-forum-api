@@ -9,7 +9,7 @@ import {
   JoinTable,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { ArticleEntity } from '../article/entities/article.entity';
+import { ArticleEntity } from '../article/article.entity';
 
 @Entity()
 @Unique(['username'])

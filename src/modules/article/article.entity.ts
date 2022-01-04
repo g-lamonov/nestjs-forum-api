@@ -1,6 +1,6 @@
 import { CategoryEntity } from 'src/modules/category/category.entity';
-import { CommentEntity } from 'src/modules/comment/entities/comment.entity';
-import { TagEntity } from 'src/modules/tag/entities/tag.entity';
+import { CommentEntity } from 'src/modules/comment/comment.entity';
+import { TagEntity } from 'src/modules/tag/tag.entity';
 import { UserEntity } from 'src/modules/user/user.entity';
 import {
   BeforeUpdate,
