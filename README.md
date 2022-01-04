@@ -1,2 +1,2 @@
-# Simple blog backend
-A simple blog api built with Node.js, NestJS, Postgres, TypeORM.
+# Simple forum backend
+A simple forum api built with Node.js, NestJS, Postgres, TypeORM.

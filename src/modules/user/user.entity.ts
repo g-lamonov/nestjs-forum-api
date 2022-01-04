@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { ArticleEntity } from '../article/article.entity';
+import { UserRole } from 'src/core/common/enums/UserEnums';
 
 @Entity()
 @Unique(['username'])
@@ -19,6 +20,9 @@ export class UserEntity extends BaseEntity {
 
   @Column()
   username: string;
+
+  @Column()
+  role: UserRole;
 
   @Column({ select: false })
   password: string;

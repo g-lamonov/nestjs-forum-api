@@ -8,8 +8,11 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/core/common/decorators/roles.decorator';
+import { UserRole } from 'src/core/common/enums/UserEnums';
+import { AuthenticationGuard } from '../auth/authentication.guard';
+import { AuthorizationGuard } from '../auth/authorization.guard';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -20,7 +23,8 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoryService) {}
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @Roles(UserRole.Admin)
   @Post()
   async createCategory(
     @Body() createCategoryDto: CreateCategoryDto,
@@ -31,14 +35,16 @@ export class CategoriesController {
     return this.categoriesService.createCategory(user.id, createCategoryDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @Roles(UserRole.User, UserRole.Moderator, UserRole.Admin)
   @Get()
   async getAllCategories() {
     return await this.categoriesService.getAllCategories();
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @ApiParam({ name: 'id', type: 'number' })
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @Roles(UserRole.User, UserRole.Moderator, UserRole.Admin)
   @Get(':id')
   async getCategoryById(@Param() params) {
     const { id } = params;
@@ -46,7 +52,8 @@ export class CategoriesController {
     return this.categoriesService.getCategoryById(id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @Roles(UserRole.Admin)
   @Put(':id')
   async updateCategory(
     @Param('id') id: number,

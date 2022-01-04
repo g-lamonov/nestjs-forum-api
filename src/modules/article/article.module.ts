@@ -8,9 +8,11 @@ import { TagEntity } from '../tag/tag.entity';
 import { CommentEntity } from '../comment/comment.entity';
 import { CategoryEntity } from '../category/category.entity';
 import { CommentService } from '../comment/comment.service';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
+    UserModule,
     TypeOrmModule.forFeature([
       ArticleEntity,
       UserEntity,

@@ -6,7 +6,10 @@ import { CoreApiResponse } from 'src/core/common/api/CoreApiResponse';
 import {
   ConflictException,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
+import { UserRole } from 'src/core/common/enums/UserEnums';
 
 @EntityRepository(UserEntity)
 export class UsersRepository extends Repository<UserEntity> {
@@ -15,6 +18,7 @@ export class UsersRepository extends Repository<UserEntity> {
 
     const user = new UserEntity();
     user.username = username;
+    user.role = UserRole.User;
     user.salt = await bcrypt.genSalt();
     user.password = await this.hashPassword(password, user.salt);
 
@@ -45,6 +49,21 @@ export class UsersRepository extends Repository<UserEntity> {
     } else {
       return null;
     }
+  }
+
+  public async validateUserFromJwtPayload(payload: JwtPayload): Promise<any> {
+    const { username } = payload;
+
+    const user = await getRepository(UserEntity).findOne({
+      where: { username },
+      select: ['username'],
+    });
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    return payload;
   }
 
   private async hashPassword(password: string, salt: string): Promise<string> {
